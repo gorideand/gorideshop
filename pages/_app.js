@@ -1,12 +1,25 @@
-import '../styles/globals.css'
-import { CartProvider } from '../components/CartContext'
+import "../styles/globals.css"
+import { Rubik, Barlow } from "next/font/google"
+import { CartProvider } from "../components/CartContext"
 
-function MyApp({ Component, pageProps }) {
+const rubik = Rubik({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-rubik",
+})
+
+const barlow = Barlow({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-barlow",
+})
+
+export default function MyApp({ Component, pageProps }) {
   return (
     <CartProvider>
-      <Component {...pageProps} />
+      <main className={`${rubik.variable} ${barlow.variable} font-sans`}>
+        <Component {...pageProps} />
+      </main>
     </CartProvider>
   )
 }
-
-export default MyApp

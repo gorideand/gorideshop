@@ -3,91 +3,137 @@ import Header from '../components/Header'
 import Link from 'next/link'
 
 const PRODUCTS = [
-  { id: 'bike1', title: 'Juego de cambios pro', price: 24900, image: null },
+  { id: 'bike1', title: 'Juego de cambios PRO', price: 24900, image: null },
   { id: 'helmet', title: 'Casco aerodinámico', price: 12900, image: null },
-  { id: 'espresso', title: 'Café de especialidad - paquete 250g', price: 1299, image: null },
+  { id: 'espresso', title: 'Café especialidad 250g', price: 1299, image: null },
 ]
 
 export default function Home() {
   return (
     <>
       <Head>
-        <title>GO RIDE - Bicicletería & Café</title>
+        <title>GO RIDE - Bicicletería &amp; Café</title>
       </Head>
 
-      <Header />
+      <div className="min-h-screen bg-brand-bg text-brand-dark">
+        <Header />
 
-      <main className="max-w-4xl mx-auto px-4 py-6">
-        {/* HERO / PORTADA */}
-        <section className="text-center sm:text-left">
-          <p className="text-[11px] uppercase tracking-[0.25em] text-gray-500">
-            Bicicletería • Taller • Café
-          </p>
+        <main className="max-w-5xl mx-auto px-4 pb-12 pt-6">
+          {/* HERO */}
+          <section className="grid gap-8 md:grid-cols-[1.4fr,1fr] items-center">
+            <div>
+              <p className="text-[12px] uppercase tracking-[0.25em] text-gray-500">
+                Taller • Tienda • Café
+              </p>
 
-          <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-            Pedaleá, arreglá y tomá café en el mismo lugar.
-          </h1>
+              <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-title tracking-tight leading-tight">
+                Tu lugar para{' '}
+                <span className="text-brand-accent">
+                  pedalear, reparar y desconectar
+                </span>{' '}
+                en la ciudad.
+              </h1>
 
-          <p className="mt-3 text-sm text-gray-600 sm:text-base">
-            GO RIDE es tu punto de encuentro ciclista: taller, tienda y café de
-            especialidad en un solo espacio.
-          </p>
+              <p className="mt-4 text-base sm:text-lg text-gray-700 max-w-xl">
+                Ajustes rápidos, puestas a punto completas y buen café de
+                especialidad mientras esperás. Reservá turno en el taller o
+                pedí repuestos desde la tienda online.
+              </p>
 
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-start">
-            <Link
-              href="/"
-              className="w-full sm:w-auto px-4 py-2 rounded-md bg-gray-900 text-white text-center text-sm font-medium"
-            >
-              Ver tienda
-            </Link>
-
-            <Link
-              href="/taller"
-              className="w-full sm:w-auto px-4 py-2 rounded-md border border-gray-300 text-sm text-gray-800 text-center"
-            >
-              Reservar taller
-            </Link>
-          </div>
-        </section>
-
-        {/* LISTA DE PRODUCTOS */}
-        <section className="mt-10">
-          <div className="flex items-center justify-between gap-2">
-            <h2 className="text-lg font-semibold">Productos destacados</h2>
-            <span className="text-xs text-gray-500">
-              Online & en el local
-            </span>
-          </div>
-
-          <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {PRODUCTS.map((p) => (
-              <div
-                key={p.id}
-                className="rounded-lg border p-4 flex flex-col"
-              >
-                <div className="h-32 sm:h-40 bg-gray-100 flex items-center justify-center text-xs text-gray-400 rounded-md">
-                  Imagen
-                </div>
-
-                <h3 className="mt-3 text-sm font-medium">
-                  {p.title}
-                </h3>
-
-                <p className="mt-1 text-sm text-gray-700">
-                  €{(p.price / 100).toFixed(2)}
-                </p>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Link
+                  href="/"
+                  className="w-full sm:w-auto inline-flex justify-center rounded-full bg-gray-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-black"
+                >
+                  Ver productos
+                </Link>
 
                 <Link
-                  href={`/product/${p.id}`}
-                  className="mt-3 text-sm font-medium text-blue-600"
+                  href="/taller"
+                  className="w-full sm:w-auto inline-flex justify-center rounded-full border border-gray-400 px-5 py-2.5 text-sm font-medium text-gray-800 hover:border-gray-800 hover:bg-white/40"
                 >
-                  Ver
+                  Reservar taller
                 </Link>
               </div>
-            ))}
-          </div>
-        </section>
-      </main>
+
+              <p className="mt-4 text-[12px] uppercase tracking-[0.2em] text-gray-500">
+                Reparaciones · Accesorios · Café de especialidad
+              </p>
+            </div>
+
+            {/* Lado derecho: tarjeta de taller */}
+            <div className="relative">
+              <div className="rounded-3xl bg-white shadow-sm border border-gray-100 p-5 flex flex-col gap-3">
+                <p className="text-[12px] uppercase tracking-[0.25em] text-gray-500">
+                  Taller GO RIDE
+                </p>
+                <p className="text-sm md:text-base font-medium">
+                  Turnos express desde{' '}
+                  <span className="text-brand-accent">24h</span>.
+                </p>
+                <p className="text-xs md:text-sm text-gray-600">
+                  Ajuste de cambios, frenos, centrado de ruedas y service
+                  completo para bicis urbanas y gravel.
+                </p>
+
+                <div className="mt-2 flex items-center justify-between text-xs md:text-sm text-gray-600">
+                  <span>Lunes a sábado</span>
+                  <span>10:00 – 19:30</span>
+                </div>
+
+                <div className="mt-3 rounded-2xl bg-gray-100 h-32 flex items-center justify-center text-[11px] text-gray-500">
+                  Aquí luego podemos poner una foto real del local.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* PRODUCTOS DESTACADOS */}
+          <section className="mt-10">
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="text-lg md:text-xl font-title font-semibold">
+                Productos destacados
+              </h2>
+              <span className="text-xs md:text-sm text-gray-500">
+                Online &amp; en el local
+              </span>
+            </div>
+
+            <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
+              {PRODUCTS.map((p) => (
+                <article
+                  key={p.id}
+                  className="group rounded-2xl bg-white/80 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col overflow-hidden"
+                >
+                  <div className="h-32 bg-gray-100 flex items-center justify-center text-[12px] text-gray-500">
+                    Foto producto
+                  </div>
+
+                  <div className="p-4 flex flex-col flex-1">
+                    <h3 className="text-base font-medium group-hover:text-brand-accent line-clamp-2">
+                      {p.title}
+                    </h3>
+
+                    <p className="mt-2 text-sm md:text-base font-semibold">
+                      €{(p.price / 100).toFixed(2)}
+                    </p>
+
+                    <div className="mt-auto pt-3 flex items-center justify-between text-xs md:text-sm">
+                      <Link
+                        href={`/product/${p.id}`}
+                        className="font-medium text-blue-600 hover:underline"
+                      >
+                        Ver detalle
+                      </Link>
+                      <span className="text-gray-500">En stock</span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        </main>
+      </div>
     </>
   )
 }
