@@ -36,12 +36,13 @@ export default function Home() {
               </p>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Link
-                  href="/"
-                  className="w-full sm:w-auto inline-flex justify-center rounded-full bg-gray-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-black"
-                >
-                  Ver productos
-                </Link>
+               
+               <Link
+  href="/tienda"
+  className="w-full sm:w-auto inline-flex justify-center rounded-full bg-gray-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-black"
+>
+  Ver productos
+</Link>
 
                 <Link
                   href="/taller"
