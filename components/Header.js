@@ -8,6 +8,7 @@ export default function Header() {
   return (
     <header className="border-b border-gray-200 bg-white/90 backdrop-blur sticky top-0 z-20">
       <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
+        
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <img
@@ -17,17 +18,30 @@ export default function Header() {
           />
         </Link>
 
+        {/* Navegación */}
         <nav className="flex items-center gap-4 text-sm">
           <Link href="/" className="text-gray-700 hover:text-black">
+            Inicio
+          </Link>
+
+          <Link href="/tienda" className="text-gray-700 hover:text-black">
             Tienda
           </Link>
+
           <Link href="/taller" className="text-gray-700 hover:text-black">
             Taller
           </Link>
-          <Link href="/cafe" className="text-gray-700 hover:text-black hidden sm:inline">
+
+          <Link
+            href="/cafe"
+            className="text-gray-700 hover:text-black hidden sm:inline"
+          >
             Café
           </Link>
+        </nav>
 
+        {/* Acciones derecha: carrito + idioma */}
+        <div className="flex items-center gap-3">
           {/* Carrito */}
           <Link
             href="/checkout"
@@ -49,7 +63,8 @@ export default function Header() {
               CAT
             </button>
           </div>
-        </nav>
+        </div>
+
       </div>
     </header>
   )
