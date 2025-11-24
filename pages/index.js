@@ -1,12 +1,7 @@
+import products from "../data/products.json";
 import Head from 'next/head'
 import Header from '../components/Header'
 import Link from 'next/link'
-
-const PRODUCTS = [
-  { id: 'bike1', title: 'Juego de cambios PRO', price: 24900, image: null },
-  { id: 'helmet', title: 'Casco aerodinámico', price: 12900, image: null },
-  { id: 'espresso', title: 'Café especialidad 250g', price: 1299, image: null },
-]
 
 export default function Home() {
   return (
@@ -100,7 +95,7 @@ export default function Home() {
             </div>
 
             <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
-              {PRODUCTS.map((p) => (
+              {products.slice(0, 6).map((p) => (
                 <article
                   key={p.id}
                   className="group rounded-2xl bg-white/80 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col overflow-hidden"
@@ -111,11 +106,11 @@ export default function Home() {
 
                   <div className="p-4 flex flex-col flex-1">
                     <h3 className="text-base font-medium group-hover:text-brand-accent line-clamp-2">
-                      {p.title}
+                      {p.name}
                     </h3>
 
                     <p className="mt-2 text-sm md:text-base font-semibold">
-                      €{(p.price / 100).toFixed(2)}
+                      €{p.price.toFixed(2)}
                     </p>
 
                     <div className="mt-auto pt-3 flex items-center justify-between text-xs md:text-sm">
@@ -125,7 +120,9 @@ export default function Home() {
                       >
                         Ver detalle
                       </Link>
-                      <span className="text-gray-500">En stock</span>
+                      <span className="text-gray-500">
+                        {p.stock === 0 ? "Sin stock" : "En stock"}
+                      </span>
                     </div>
                   </div>
                 </article>
