@@ -1,9 +1,25 @@
-import products from "../data/products.json";
 import Head from 'next/head'
-import Header from '../components/Header'
 import Link from 'next/link'
+import Header from '../components/Header'
+import { supabase } from '../lib/supabase'
 
-export default function Home() {
+export async function getServerSideProps() {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('visible', true)              // solo productos visibles
+    .order('name_web', { ascending: true })
+    .limit(6)                         // 6 destacados
+
+  if (error) {
+    console.error('Supabase error en Home:', error)
+    return { props: { products: [] } }
+  }
+
+  return { props: { products: data } }
+}
+
+export default function Home({ products }) {
   return (
     <>
       <Head>
@@ -32,17 +48,16 @@ export default function Home() {
               <p className="mt-4 text-base sm:text-lg text-gray-700 max-w-xl">
                 Ajustes rápidos, puestas a punto completas y buen café de
                 especialidad mientras esperás. Reservá turno en el taller o
-                pedí repuestos desde la tienda online.
+                pedí recambios desde la tienda online.
               </p>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-               
-               <Link
-  href="/tienda"
-  className="w-full sm:w-auto inline-flex justify-center rounded-full bg-gray-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-black"
->
-  Ver productos
-</Link>
+                <Link
+                  href="/tienda"
+                  className="w-full sm:w-auto inline-flex justify-center rounded-full bg-gray-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-black"
+                >
+                  Ver productos
+                </Link>
 
                 <Link
                   href="/taller"
@@ -57,7 +72,7 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Lado derecho: tarjeta de taller */}
+            {/* Tarjeta taller */}
             <div className="relative">
               <div className="rounded-3xl bg-white shadow-sm border border-gray-100 p-5 flex flex-col gap-3">
                 <p className="text-[12px] uppercase tracking-[0.25em] text-gray-500">
@@ -95,40 +110,56 @@ export default function Home() {
               </span>
             </div>
 
-            <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
-              {products.slice(0, 6).map((p) => (
-                <article
-                  key={p.id}
-                  className="group rounded-2xl bg-white/80 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col overflow-hidden"
-                >
-                  <div className="h-32 bg-gray-100 flex items-center justify-center text-[12px] text-gray-500">
-                    Foto producto
-                  </div>
-
-                  <div className="p-4 flex flex-col flex-1">
-                    <h3 className="text-base font-medium group-hover:text-brand-accent line-clamp-2">
-                      {p.name}
-                    </h3>
-
-                    <p className="mt-2 text-sm md:text-base font-semibold">
-                      €{p.price.toFixed(2)}
-                    </p>
-
-                    <div className="mt-auto pt-3 flex items-center justify-between text-xs md:text-sm">
-                      <Link
-                        href={`/product/${p.id}`}
-                        className="font-medium text-blue-600 hover:underline"
-                      >
-                        Ver detalle
-                      </Link>
-                      <span className="text-gray-500">
-                        {p.stock === 0 ? "Sin stock" : "En stock"}
-                      </span>
+            {products.length === 0 ? (
+              <p className="mt-4 text-sm text-gray-500">
+                Encara no hi ha productes disponibles. 🙈
+              </p>
+            ) : (
+              <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
+                {products.map((p) => (
+                  <article
+                    key={p.id}
+                    className="group rounded-2xl bg-white/80 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col overflow-hidden"
+                  >
+                    <div className="h-32 bg-gray-100 flex items-center justify-center text-[12px] text-gray-500">
+                      {p.image_url ? (
+                        <img
+                          src={p.image_url}
+                          alt={p.name_web || p.name_holded}
+                          className="h-full w-full object-contain"
+                        />
+                      ) : (
+                        'Foto producto'
+                      )}
                     </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+
+                    <div className="p-4 flex flex-col flex-1">
+                      <h3 className="text-base font-medium group-hover:text-brand-accent line-clamp-2">
+                        {p.name_web || p.name_holded}
+                      </h3>
+
+                      <p className="mt-2 text-sm md:text-base font-semibold">
+                        {typeof p.price === 'number'
+                          ? `€${p.price.toFixed(2)}`
+                          : ''}
+                      </p>
+
+                      <div className="mt-auto pt-3 flex items-center justify-between text-xs md:text-sm">
+                        <Link
+                          href={`/product/${p.id}`}
+                          className="font-medium text-blue-600 hover:underline"
+                        >
+                          Ver detalle
+                        </Link>
+                        <span className="text-gray-500">
+                          {p.stock > 0 ? 'En stock' : 'Sin stock'}
+                        </span>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
           </section>
         </main>
       </div>

@@ -1,37 +1,95 @@
-import { useRouter } from 'next/router'
+import Head from 'next/head'
+import Link from 'next/link'
 import Header from '../../components/Header'
-import { useCart } from '../../components/CartContext'
+import { supabase } from '../../lib/supabase'
 
-const PRODUCTS = {
-  bike1: { id: 'bike1', title: 'Juego de cambios pro', price: 24900, description: 'Componentes de alta gama' },
-  helmet: { id: 'helmet', title: 'Casco aerodinámico', price: 12900, description: 'Protección y aerodinámica' },
-  espresso: { id: 'espresso', title: 'Café de especialidad', price: 1299, description: '250g - Tostado medio' }
+export async function getServerSideProps({ params }) {
+  const { id } = params
+
+  const { data: product, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle()
+
+  if (error) {
+    console.error('Error cargando producto:', error)
+    return { notFound: true }
+  }
+
+  if (!product) {
+    return { notFound: true }
+  }
+
+  return {
+    props: {
+      product,
+    },
+  }
 }
 
-export default function ProductPage() {
-  const { query } = useRouter()
-  const id = query.id
-  const product = PRODUCTS[id]
-  const { add } = useCart()
-
-  if (!product) return <div><Header /><main className='max-w-4xl mx-auto p-6'>Producto no encontrado</main></div>
+export default function ProductPage({ product }) {
+  const name = product.name_web || product.name_holded
 
   return (
     <>
-    <Header />
-    <main className="max-w-4xl mx-auto p-6">
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="h-80 bg-gray-100 flex items-center justify-center text-gray-400">Imagen</div>
-        <div>
-          <h1 className="text-2xl font-bold">{product.title}</h1>
-          <p className="mt-3 text-gray-600">{product.description}</p>
-          <p className="mt-4 text-xl font-semibold">${(product.price/100).toFixed(2)}</p>
-          <div className="mt-6">
-            <button onClick={() => add(product)} className="px-4 py-2 bg-brown text-white rounded">Agregar al carrito</button>
-          </div>
-        </div>
+      <Head>
+        <title>{name} | GO RIDE</title>
+      </Head>
+
+      <div className="min-h-screen bg-brand-bg text-brand-dark">
+        <Header />
+
+        <main className="max-w-5xl mx-auto px-4 pb-12 pt-6">
+          <Link
+            href="/tienda"
+            className="text-xs text-gray-500 hover:text-gray-800"
+          >
+            ← Volver a la tienda
+          </Link>
+
+          <section className="mt-4 grid gap-8 md:grid-cols-[1.1fr,1fr] items-start">
+            {/* Imagen */}
+            <div className="rounded-3xl bg-white border border-gray-200 shadow-sm p-4 flex items-center justify-center min-h-[240px]">
+              {product.image_url ? (
+                <img
+                  src={product.image_url}
+                  alt={name}
+                  className="max-h-64 w-auto object-contain"
+                />
+              ) : (
+                <span className="text-xs text-gray-500">Sin imagen</span>
+              )}
+            </div>
+
+            {/* Info */}
+            <div>
+              <h1 className="text-2xl md:text-3xl font-title font-semibold">
+                {name}
+              </h1>
+
+              <p className="mt-2 text-sm text-gray-500">
+                Ref: <span className="font-mono text-[11px]">{product.id}</span>
+              </p>
+
+              <p className="mt-4 text-xl font-semibold">
+                {typeof product.price === 'number'
+                  ? `€${product.price.toFixed(2)}`
+                  : ''}
+              </p>
+
+              <p className="mt-2 text-sm text-gray-600">
+                {product.stock > 0 ? 'En stock' : 'Sin stock'}
+              </p>
+
+              <div className="mt-4 text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                {product.description ||
+                  'Encara no hem afegit la descripció d’aquest producte.'}
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
-    </main>
     </>
   )
 }
